@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Open Wave is a browser-based multitrack audio workspace for Chrome and Edge." />
+  <title>Open Wave V3 — Browser Studio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23100f14'/%3E%3Cpath d='M10 34h8l4-15 7 29 7-35 7 28 4-12h7' fill='none' stroke='%23ff435f' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="v3.css" />
+  <link rel="stylesheet" href="v4.css" />
+  <link rel="stylesheet" href="v5.css" />
+  <link rel="stylesheet" href="v6.css" />
+  <link rel="stylesheet" href="v7.css" />
+  <link rel="stylesheet" href="v8.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">OW</span><span>OPEN WAVE</span><small>V3 WEB</small></div>
+    <div class="project-name"><input id="projectName" value="Untitled session" aria-label="Project name" /><span id="saveStatus">Saved locally</span></div>
+    <div class="top-actions">
+      <button id="undoBtn" class="ghost" title="Undo (Ctrl+Z)" disabled>↶ Undo</button><button id="newBtn" class="ghost">New</button><button id="saveBtn" class="ghost">Save</button><button id="loadBtn" class="ghost">Open</button><button id="exportBtn" class="accent">Export WAV</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="transport">
+      <div class="transport-buttons">
+        <button id="stopBtn" title="Stop (Space)">■</button><button id="playBtn" class="play" title="Play (Space)">▶</button><button id="recordBtn" class="record" title="Record microphone">●</button>
+      </div>
+      <div class="clock"><span id="timeDisplay">00:00.000</span><small>TIME</small></div>
+      <label class="tempo">BPM <input id="bpm" type="number" min="40" max="240" value="120" /></label>
+      <label class="toggle"><input id="metronome" type="checkbox" /><span></span> Metronome</label>
+      <label class="toggle"><input id="loopToggle" type="checkbox" /><span></span> Loop</label>
+      <div class="loop-range" aria-label="Loop region"><button id="loopInBtn" title="Set loop start at playhead">IN</button><output id="loopInOut">0.0</output><button id="loopOutBtn" title="Set loop end at playhead">OUT</button><output id="loopOutOut">8.0</output></div>
+      <div class="zoom"><button id="zoomOut">−</button><span id="zoomLabel">100%</span><button id="zoomIn">+</button></div>
+      <div id="audioState" class="audio-state"><i></i> Audio ready</div>
+    </section>
+
+    <section class="studio">
+      <aside class="track-list">
+        <div class="track-list-head"><span>TRACKS</span><button id="addTrackBtn" title="Add track">＋</button></div>
+        <div id="trackHeaders"></div>
+      </aside>
+      <section class="timeline-wrap">
+        <div class="ruler" id="ruler"></div>
+        <div id="timeline" class="timeline">
+          <div id="loopRegion" class="loop-region" aria-hidden="true"></div>
+          <div id="playhead" class="playhead"><span></span></div>
+        </div>
+      </section>
+      <aside class="inspector" id="inspector">
+        <div class="inspector-tabs"><button class="active">FX</button><button>CLIP</button></div>
+        <div id="emptyInspector" class="empty-panel"><div class="dial-art"></div><p>Select a track to shape its sound.</p></div>
+        <div id="fxPanel" hidden>
+          <div class="channel-title"><span id="selectedColor"></span><div><small>CHANNEL</small><strong id="selectedTrackName">Track</strong></div></div>
+          <div class="effect" data-effect="filter"><div><strong>FILTER</strong><button class="fx-switch" id="filterOn" type="button" role="switch" aria-checked="true" aria-label="Toggle filter"><span></span></button></div><label>Low-pass <output id="filterOut">18.0 kHz</output><input id="filter" type="range" min="200" max="20000" value="18000" /></label></div>
+          <div class="effect" data-effect="dist"><div><strong>DISTORTION</strong><button class="fx-switch" id="distOn" type="button" role="switch" aria-checked="false" aria-label="Toggle distortion"><span></span></button></div><label>Drive <output id="distOut">28%</output><input id="dist" type="range" min="0" max="100" value="28" /></label></div>
+          <div class="effect" data-effect="wah"><div><strong>WAH WAH</strong><button class="fx-switch" id="wahOn" type="button" role="switch" aria-checked="false" aria-label="Toggle wah wah"><span></span></button></div><label>Sweep <output id="wahDepthOut">65%</output><input id="wahDepth" type="range" min="0" max="100" value="65" /></label><label>Rate <output id="wahRateOut">1.5 Hz</output><input id="wahRate" type="range" min="0.1" max="8" step="0.1" value="1.5" /></label><label>Resonance <output id="wahQOut">8</output><input id="wahQ" type="range" min="1" max="20" step="0.5" value="8" /></label></div>
+          <div class="effect" data-effect="comp"><div><strong>COMPRESSOR</strong><button class="fx-switch" id="compOn" type="button" role="switch" aria-checked="false" aria-label="Toggle compressor"><span></span></button></div><label>Threshold <output id="thresholdOut">−18 dB</output><input id="threshold" type="range" min="-60" max="0" value="-18" /></label><label>Ratio <output id="ratioOut">4:1</output><input id="ratio" type="range" min="1" max="20" step="0.5" value="4" /></label><div class="dual-param"><label>Attack<input id="attack" type="number" min="0" max="1" step="0.01" value="0.01" /></label><label>Release<input id="release" type="number" min="0" max="1" step="0.01" value="0.25" /></label></div></div>
+          <div class="effect" data-effect="delay"><div><strong>DELAY</strong><button class="fx-switch" id="delayOn" type="button" role="switch" aria-checked="false" aria-label="Toggle delay"><span></span></button></div><label>Mix <output id="delayOut">22%</output><input id="delay" type="range" min="0" max="60" value="22" /></label></div>
+          <div class="effect" data-effect="reverb"><div><strong>SPACE</strong><button class="fx-switch" id="reverbOn" type="button" role="switch" aria-checked="false" aria-label="Toggle reverb"><span></span></button></div><label>Reverb <output id="reverbOut">18%</output><input id="reverb" type="range" min="0" max="70" value="18" /></label></div>
+          <section class="plugin-rack"><div class="plugin-title"><strong>PLUGIN RACK</strong><span>Browser effects</span></div><div class="plugin-add"><select id="pluginType" aria-label="Plugin type"><option value="chorus">Chorus</option><option value="tremolo">Tremolo</option><option value="limiter">Limiter</option><option value="gain">Gain trim</option></select><button id="addPluginBtn" type="button">＋ Add</button></div><div id="pluginList"></div><p>Desktop VST3/AU files are not supported by browsers.</p></section>
+        </div>
+      </aside>
+    </section>
+
+    <section class="bottom-bar">
+      <div class="clip-tools"><button id="importBtn">＋ Import audio</button><input id="fileInput" type="file" accept="audio/*" multiple hidden /><button id="beatBtn">808 Beat Maker</button><button id="synthBtn">Virtual Synth</button><button id="stemsBtn">Vocal / Instrument Split</button><button id="clipAudioBtn">Speed / Tempo / Key</button><button id="duplicateBtn">Duplicate</button><button id="splitBtn">Split at playhead</button><button id="deleteBtn">Delete clip</button></div>
+      <div class="hint"><kbd>Space</kbd> Play <kbd>Ctrl+D</kbd> Duplicate <span>Drag clips across channels</span></div>
+    </section>
+  </main>
+
+  <dialog id="loadDialog"><form method="dialog"><header><h2>Open a session</h2><button value="cancel">×</button></header><div id="projectList"></div><p>Sessions and imported audio stay on this device.</p></form></dialog>
+  <dialog id="beatDialog" class="beat-dialog"><div class="beat-head"><div><small>DRUM MACHINE</small><h2>808 Beat Maker</h2></div><button id="closeBeatBtn" type="button">×</button></div><div class="step-numbers" id="stepNumbers"></div><div id="beatGrid" class="beat-grid"></div><div class="beat-actions"><button id="previewBeatBtn" type="button">▶ Preview</button><button id="clearBeatBtn" type="button">Clear</button><button id="addBeatBtn" class="accent" type="button">Add beat to timeline</button></div><p>One 16-step bar at the project BPM. The sounds are synthesized 808-style drums.</p></dialog>
+  <dialog id="synthDialog" class="synth-dialog"><div class="synth-head"><div><small>INSTRUMENT</small><h2>Open Wave Virtual Synth</h2></div><button id="closeSynthBtn" type="button">×</button></div><div class="synth-body"><section class="synth-presets"><label>Sound<select id="synthPreset"><option value="lofi">Lofi Keys</option><option value="house">Deep House Pluck</option><option value="pad">Warm Pad</option><option value="sub">Sub Bass</option></select></label><div id="synthDescription">Dusty, softened keys with chorus and room tone.</div></section><section class="synth-controls"><label>Cutoff <output id="synthCutoffOut"></output><input id="synthCutoff" type="range" min="200" max="12000" value="3200"></label><label>Attack <output id="synthAttackOut"></output><input id="synthAttack" type="range" min="0.005" max="2" step="0.005" value="0.02"></label><label>Release <output id="synthReleaseOut"></output><input id="synthRelease" type="range" min="0.05" max="4" step="0.05" value="1.1"></label><label>Saturation <output id="synthSatOut"></output><input id="synthSat" type="range" min="0" max="100" value="25"></label><label>Chorus <output id="synthChorusOut"></output><input id="synthChorus" type="range" min="0" max="100" value="35"></label><label>Delay <output id="synthDelayOut"></output><input id="synthDelay" type="range" min="0" max="60" value="18"></label><label>Reverb <output id="synthReverbOut"></output><input id="synthReverb" type="range" min="0" max="70" value="32"></label><label>Vinyl <output id="synthNoiseOut"></output><input id="synthNoise" type="range" min="0" max="35" value="12"></label><label>Pump <output id="synthPumpOut"></output><input id="synthPump" type="range" min="0" max="100" value="0"></label></section><div id="synthKeys" class="synth-keys" aria-label="Synth keyboard"></div><p class="key-hint">Play with the keys A W S E D F T G Y H U J K</p></div><div class="synth-actions"><button id="panicSynthBtn" type="button">Stop notes</button><button id="addSynthLoopBtn" class="accent" type="button">Add 4-bar loop to timeline</button></div></dialog>
+  <dialog id="stemsDialog" class="stems-dialog"><div class="stems-head"><div><small>AI STEM SEPARATION</small><h2>Demucs Stem Studio</h2></div><button id="closeStemsBtn" type="button">×</button></div><div class="stems-body"><div class="stem-source"><span>Selected mix</span><strong id="stemSourceName">No clip selected</strong></div><section class="demucs-panel"><div class="demucs-status"><span id="demucsDot"></span><strong id="demucsConnection">Checking local engine…</strong></div><label>Output stems<select id="demucsMode"><option value="two">Vocals + instrumental</option><option value="four">Vocals + drums + bass + other</option></select></label><div class="demucs-actions"><button id="demucsRunBtn" class="accent" type="button">Separate with Demucs</button><button id="demucsCancelBtn" type="button" disabled>Cancel</button></div><p id="demucsHelp">Start the included Demucs companion, then reopen the DAW at <strong>localhost:8765</strong>.</p></section><details class="fallback-panel"><summary>Browser fallback</summary><div class="stem-controls"><label>Separation profile<select id="stemProfile"><option value="balanced">Balanced</option><option value="vocal">Clearer vocals</option><option value="music">Preserve instruments</option></select></label><label>Separation strength <output id="stemStrengthOut">75%</output><input id="stemStrength" type="range" min="35" max="100" value="75"></label></div><p>This faster fallback estimates centered vocals. Demucs is recommended for finished mixes.</p><div class="stem-options"><button id="vocalStemBtn" type="button"><strong>Estimate vocals</strong><span>Create a vocal-focused track</span></button><button id="instrumentStemBtn" type="button"><strong>Estimate instruments</strong><span>Create a vocal-reduced track</span></button><button id="bothStemsBtn" type="button"><strong>Create both estimates</strong><span>Analyze once and render both tracks</span></button></div></details><div class="stem-progress"><span id="stemProgressBar"></span></div><div id="stemStatus" role="status"></div></div></dialog>
+  <div id="clipContextMenu" class="clip-context-menu" role="menu" hidden><button id="contextClipAudio" type="button" role="menuitem">Speed / Tempo / Key</button><button id="contextSplit" type="button" role="menuitem">Split here <kbd>S</kbd></button><button id="contextDuplicate" type="button" role="menuitem">Duplicate <kbd>Ctrl+D</kbd></button><button id="contextDelete" class="danger" type="button" role="menuitem">Delete <kbd>Del</kbd></button></div>
+  <dialog id="clipAudioDialog"><header><h2>Clip speed &amp; analysis</h2><button id="closeClipAudio" type="button">Close</button></header><p id="clipAudioName"></p>
+<label>Playback speed <output id="clipRateOut">1.00×</output><input id="clipRate" type="range" min="0.25" max="2" step="0.01" value="1"></label>
+<div class="audio-actions"><button id="applyClipRate">Apply speed</button><button id="resetClipRate">Reset to 1×</button></div>
+<p>¼× to 2× speed. Pitch changes with speed, like a tape machine. The clip stays anchored at its start.</p>
+<hr><button id="analyzeClip">Detect tempo &amp; key</button><button id="cancelAnalysis" hidden>Cancel analysis</button>
+<p id="analysisResult" role="status">Select Detect to analyze this clip.</p>
+<button id="useClipBpm" disabled>Use detected tempo for project</button>
+<p>Estimates the current playback speed using up to 90 seconds. Sparse drums, short clips, and changing keys can give uncertain results. Tempo may be half or double the intended beat.</p></dialog>
+<div id="toast" role="status"></div>
+  <script src="app.js"></script>
+  <script src="synth.js"></script>
+  <script src="stems.js"></script>
+  <script src="clip-audio.js"></script>
+<script src="desktop-projects.js"></script>
+</body>
+</html>
