@@ -1,0 +1,7 @@
+Build placeholder — the Windows build replaces this file with license texts from
+installed Python dependencies using pip-licenses --with-license-file.
+Electron's packaged distribution also includes Chromium/Electron license notices.
+Demucs project and license: https://github.com/adefossez/demucs
+Model weights are downloaded from the model project's upstream host on first use.
+Before public redistribution, verify the license for the exact downloaded weights
+and all bundled runtime dependencies. This source archive contains no model weights.

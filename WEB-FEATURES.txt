@@ -1,0 +1,76 @@
+OPEN WAVE V3 WEB
+
+Chrome / Edge quick start with Demucs AI
+1. Extract the ZIP file first.
+2. Install Python 3.10 or newer from python.org if it is not already installed.
+3. Double-click Install-Demucs.bat once. The installation can take several minutes.
+4. Double-click Start-Open-Wave.bat whenever you want to use the DAW.
+5. Chrome or Edge opens http://127.0.0.1:8765 automatically.
+6. Import audio, click the mix clip, and open Demucs Stem Studio.
+
+The first AI separation downloads the htdemucs model and can take longer.
+Choose either Vocals + instrumental or Vocals + drums + bass + other.
+Audio and separated stems remain on this computer.
+
+If Demucs reports an error
+1. Close the Start-Open-Wave window.
+2. Run Install-Demucs.bat again to repair and verify NumPy, PyTorch, and Demucs.
+3. Start Open Wave again and retry. The DAW now displays the underlying Demucs
+   message instead of only "error code 1" and retries CUDA failures on the CPU.
+
+Browser-only quick start
+1. Extract the ZIP file.
+2. Double-click Open-Wave-V3.html.
+3. Use the Browser fallback inside the stem tool.
+
+Open-Wave-V3.html is self-contained. It does not depend on neighboring script
+or stylesheet files, so it can be opened directly in Chrome or Edge. Demucs AI
+requires Start-Open-Wave.bat because a browser cannot run PyTorch by itself.
+
+Microphone recording requires a secure browser origin. To enable it locally:
+1. Open a terminal in the dist folder.
+2. Run: python -m http.server 8000
+3. Visit: http://localhost:8000
+4. Allow microphone access when Chrome or Edge asks.
+
+V3 fixes
+- Filter, distortion, delay, and reverb switches are real buttons.
+- Switching an effect changes the audio during playback.
+- Effects start with audible preset values when enabled.
+- Active effect panels are visibly highlighted.
+- Metronome can be switched on and off while playing.
+- Mute, solo, volume, and pan changes are applied during playback.
+- Track compressor with threshold, ratio, attack, and release controls.
+- Loop IN and OUT buttons define the exact section that repeats.
+- Per-track plugin rack with chorus, tremolo, limiter, and gain trim.
+- Undo button and Ctrl+Z history for editing changes.
+- Wah wah effect with sweep depth, rate, and resonance.
+- 16-step 808 beat maker with synthesized kick, snare, clap, and hi-hat.
+- Playable virtual synth with lofi keys, deep-house pluck, warm pad, and sub-bass presets.
+- Synth effects include filter, saturation, chorus, delay, reverb, vinyl texture, and pumping.
+- Computer-keyboard performance and four-bar synth-loop rendering.
+- Vocal-focused and instrumental-focused offline stem creation for stereo mixes.
+- Enhanced spectral stem separation with phase analysis, profiles, strength, and progress.
+- Drag timeline clips vertically between track channels and horizontally in time.
+- Duplicate selected clips with the button or Ctrl+D / Cmd+D.
+- Click the ruler or an empty track lane to move the playhead to that exact time.
+- Right-click any clip for Split here, Duplicate, and Delete actions.
+- Local Demucs AI companion with two-stem and four-stem separation.
+- Demucs progress, cancellation, silent-output validation, and automatic timeline import.
+
+Plugin note
+Chrome and Edge cannot load desktop VST3 or AU plugin files. The plugin rack
+uses browser-native Web Audio effects that work in the self-contained version.
+
+Projects and imported audio are saved only in this browser on this device.
+
+CLIP SPEED AND AUDIO ANALYSIS
+Select a clip and click Speed / Tempo / Key (also in the right-click menu).
+Choose 0.25x to 2x and Apply speed. Reset to 1x restores the original speed.
+This is tape-style speed: pitch changes too. Playback, split offsets, duplicates,
+saved sessions, stem extraction and WAV export respect speed.
+Detect tempo & key analyzes up to 90 seconds at the current clip speed locally.
+Estimates can be ambiguous, especially for short, percussive, or changing-key
+audio. Results show uncertainty and a possible alternative key. Use detected
+tempo for project updates the metronome/beat-maker BPM; it does not stretch
+other clips. These features require no additional installation.

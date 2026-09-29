@@ -1,0 +1,13 @@
+.venv/
+node_modules/
+runtime/
+release/
+dist/*.map
+__pycache__/
+*.py[cod]
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+

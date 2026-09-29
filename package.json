@@ -1,0 +1,6 @@
+{
+ "name":"open-wave-desktop","version":"0.1.0","description":"Local audio workstation with on-device Demucs","private":true,"author":"Open Wave","main":"desktop/main.cjs",
+ "scripts":{"start":"electron .","dist:win":"electron-builder --win nsis --x64"},
+ "devDependencies":{"electron":"^41.0.0","electron-builder":"^26.0.12"},
+ "build":{"appId":"com.openwave.desktop","productName":"Open Wave","directories":{"output":"release"},"files":["desktop/**","package.json"],"extraResources":[{"from":"dist","to":"web"},{"from":"runtime/open-wave-engine","to":"engine"},{"from":"THIRD-PARTY-NOTICES.txt","to":"THIRD-PARTY-NOTICES.txt"}],"win":{"target":"nsis","artifactName":"Open-Wave-${version}-Windows-${arch}-Setup.${ext}"},"nsis":{"oneClick":false,"perMachine":false,"allowToChangeInstallationDirectory":true}}
+}
